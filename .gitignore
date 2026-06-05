@@ -1,0 +1,28 @@
+ # Virtual environment
+venv/
+
+# Admin credentials and audit log 
+.ec_credentials
+.ec_audit.jsonl
+
+# Generated key files
+*.eckey
+*.pub
+*.priv
+
+# Encrypted and test files
+*.ec
+secret.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

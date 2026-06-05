@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EclipseCode</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <!-- NAV -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-bracket">[</span>
+            ECLIPSE<span class="logo-accent">CODE</span>
+            <span class="logo-bracket">]</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active" data-page="home">HOME</a>
+            <a href="#" class="nav-link" data-page="encrypt">ENCRYPT</a>
+            <a href="#" class="nav-link" data-page="decrypt">DECRYPT</a>
+            <a href="#" class="nav-link" data-page="visualizer">VISUALIZER</a>
+            <a href="#" class="nav-link" data-page="compare">COMPARE</a>
+            <a href="#" class="nav-link" data-page="keygen">KEYGEN</a>
+        </div>
+        <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text">SECURE</span>
+        </div>
+    </nav>
+
+    <!-- PAGES -->
+    <main class="main">
+
+        <!-- HOME -->
+        <div id="page-home" class="page active">
+            <div class="hero">
+                <div class="hero-text">
+                    <div class="hero-tag">// ENCRYPTION TOOL v2.0</div>
+                    <h1 class="hero-title">ECLIPSE<span class="accent">CODE</span></h1>
+                    <p class="hero-sub">Military-grade file encryption with real-time cipher visualization.<br>
+                    AES-256 · RSA-2048 · Classical Ciphers · SHA-256 Integrity</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="navigate('encrypt')">ENCRYPT FILE</button>
+                        <button class="btn btn-ghost" onclick="navigate('visualizer')">EXPLORE CIPHERS</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="cipher-stream" id="cipherStream"></div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">⬡</div>
+                    <h3>AES-256 + RSA-2048</h3>
+                    <p>Industry-standard modern encryption. The same algorithms used by governments and banks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">◈</div>
+                    <h3>Self-Describing Files</h3>
+                    <p>Every .ec file carries its own header. No need to remember which cipher or parameters you used.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">◎</div>
+                    <h3>SHA-256 Integrity</h3>
+                    <p>Every decryption verifies the file hash. Tampered files are detected instantly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⬢</div>
+                    <h3>Three Key Models</h3>
+                    <p>Password, key file, or RSA keypair. Choose the right model for your use case.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENCRYPT -->
+        <div id="page-encrypt" class="page">
+            <div class="page-header">
+                <div class="page-tag">// ENCRYPT</div>
+                <h2>Encrypt File</h2>
+            </div>
+            <div class="panel">
+                <div class="form-group">
+                    <label>SELECT FILE</label>
+                    <div class="file-drop" id="encryptDrop">
+                        <div class="file-drop-icon">⊕</div>
+                        <div class="file-drop-text">Drop file here or click to browse</div>
+                        <input type="file" id="encryptFile" hidden>
+                    </div>
+                    <div class="file-info" id="encryptFileInfo"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>CIPHER</label>
+                        <select id="encryptCipher" class="select">
+                            <option value="aes">AES-256 CBC (recommended)</option>
+                            <option value="rsa">RSA-2048 Hybrid</option>
+                            <option value="xor">XOR Cipher</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>KEY MODE</label>
+                        <select id="encryptMode" class="select" onchange="updateEncryptMode()">
+                            <option value="password">Password</option>
+                            <option value="keyfile">Key File (.eckey)</option>
+                            <option value="keypair">RSA Keypair (.pub)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="encryptPasswordGroup" class="form-group">
+                    <label>PASSWORD</label>
+                    <input type="password" id="encryptPassword" class="input" placeholder="Enter encryption password">
+                </div>
+
+                <div id="encryptKeyfileGroup" class="form-group hidden">
+                    <label>KEY FILE (.eckey)</label>
+                    <input type="file" id="encryptKeyfile" class="input" accept=".eckey">
+                </div>
+
+                <div id="encryptPubkeyGroup" class="form-group hidden">
+                    <label>PUBLIC KEY (.pub)</label>
+                    <input type="file" id="encryptPubkey" class="input" accept=".pub">
+                </div>
+
+                <button class="btn btn-primary btn-full" onclick="doEncrypt()">
+                    <span>ENCRYPT FILE</span>
+                </button>
+                <div class="result-box" id="encryptResult"></div>
+            </div>
+        </div>
+
+        <!-- DECRYPT -->
+        <div id="page-decrypt" class="page">
+            <div class="page-header">
+                <div class="page-tag">// DECRYPT</div>
+                <h2>Decrypt File</h2>
+            </div>
+            <div class="panel">
+                <div class="form-group">
+                    <label>SELECT .ec FILE</label>
+                    <div class="file-drop" id="decryptDrop">
+                        <div class="file-drop-icon">⊖</div>
+                        <div class="file-drop-text">Drop .ec file here or click to browse</div>
+                        <input type="file" id="decryptFile" hidden accept=".ec">
+                    </div>
+                    <div class="file-info" id="decryptFileInfo"></div>
+                </div>
+
+                <div id="decryptPasswordGroup" class="form-group">
+                    <label>PASSWORD</label>
+                    <input type="password" id="decryptPassword" class="input" placeholder="Enter decryption password">
+                </div>
+
+                <div id="decryptKeyfileGroup" class="form-group hidden">
+                    <label>KEY FILE (.eckey)</label>
+                    <input type="file" id="decryptKeyfile" class="input" accept=".eckey">
+                </div>
+
+                <div id="decryptPrivkeyGroup" class="form-group hidden">
+                    <label>PRIVATE KEY (.priv)</label>
+                    <input type="file" id="decryptPrivkey" class="input" accept=".priv">
+                </div>
+
+                <button class="btn btn-primary btn-full" onclick="doDecrypt()">
+                    <span>DECRYPT FILE</span>
+                </button>
+                <div class="result-box" id="decryptResult"></div>
+            </div>
+        </div>
+
+        <!-- VISUALIZER -->
+        <div id="page-visualizer" class="page">
+            <div class="page-header">
+                <div class="page-tag">// VISUALIZER</div>
+                <h2>Cipher Explorer</h2>
+            </div>
+            <div class="visualizer-layout">
+                <div class="panel">
+                    <div class="form-group">
+                        <label>CIPHER</label>
+                        <div class="cipher-pills" id="cipherPills"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>PLAINTEXT</label>
+                        <input type="text" id="vizText" class="input" value="HELLO ECLIPSECODE" placeholder="Enter text to encrypt">
+                    </div>
+                    <div id="vizParams"></div>
+                    <button class="btn btn-primary btn-full" onclick="doTrace()">VISUALIZE ENCRYPTION</button>
+                </div>
+
+                <div class="viz-output">
+                    <div class="viz-header">
+                        <div class="viz-label">ENCRYPTED OUTPUT</div>
+                        <div class="viz-encrypted" id="vizEncrypted">—</div>
+                    </div>
+                    <div class="steps-container" id="vizSteps"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARE -->
+        <div id="page-compare" class="page">
+            <div class="page-header">
+                <div class="page-tag">// COMPARE</div>
+                <h2>Cipher Comparison</h2>
+            </div>
+            <div class="panel">
+                <div class="form-group">
+                    <label>INPUT TEXT</label>
+                    <input type="text" id="compareText" class="input" value="Hello EclipseCode" placeholder="Text to encrypt with all ciphers">
+                </div>
+                <button class="btn btn-primary btn-full" onclick="doCompare()">COMPARE ALL CIPHERS</button>
+            </div>
+            <div class="compare-grid" id="compareGrid"></div>
+        </div>
+
+        <!-- KEYGEN -->
+        <div id="page-keygen" class="page">
+            <div class="page-header">
+                <div class="page-tag">// KEYGEN</div>
+                <h2>Key Generation</h2>
+            </div>
+            <div class="keygen-layout">
+                <div class="panel">
+                    <div class="panel-title">AES Key File</div>
+                    <p class="panel-desc">Generate a random 32-byte AES key saved to a .eckey file. Use this for symmetric encryption where you control both ends.</p>
+                    <div class="form-group">
+                        <label>OUTPUT FILENAME</label>
+                        <input type="text" id="keygenAesName" class="input" value="mykey" placeholder="e.g. mykey">
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="doKeygen('aes')">GENERATE AES KEY</button>
+                    <div class="result-box" id="keygenAesResult"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">RSA Keypair</div>
+                    <p class="panel-desc">Generate a 2048-bit RSA keypair. Share your .pub file with anyone who needs to send you encrypted files. Keep your .priv file secret.</p>
+                    <div class="form-group">
+                        <label>OUTPUT PREFIX</label>
+                        <input type="text" id="keygenRsaName" class="input" value="mykeys" placeholder="e.g. mykeys">
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="doKeygen('rsa')">GENERATE RSA KEYPAIR</button>
+                    <div class="result-box" id="keygenRsaResult"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <span>ECLIPSECODE v2.0</span>
+        <span>//</span>
+        <span>AES-256 · RSA-2048 · SHA-256</span>
+        <span>//</span>
+        <span>Built with Python + FastAPI</span>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
