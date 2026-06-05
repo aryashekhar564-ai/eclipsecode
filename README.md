@@ -1,17 +1,19 @@
 <div align="center">
 
-## `[ ECLIPSECODE ]`
+<br/>
 
-</div>
+# Eclipse&nbsp;Code
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Cryptography](https://img.shields.io/badge/AES--256%20%7C%20RSA--2048-FF0066?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+### File Encryption · Cipher Visualization · CLI + Web
 
-**A file encryption platform with interactive cipher visualization.**
+<br/>
 
-AES-256 · RSA-2048 · PBKDF2 · SHA-256 · CLI + Web UI
+![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![Cryptography](https://img.shields.io/badge/AES--256%20·%20RSA--2048-FF0066?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+<br/>
 
 </div>
 
